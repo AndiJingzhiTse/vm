@@ -1,0 +1,13 @@
+sdaifoasjdfoisadfo jdifoajdsofjaisimport Editor;
+import <string>;
+
+int main(int argc, char *argv[]) {
+  std::string filename = "";
+  if (argc > 1) {
+    filename = argv[1];
+  }
+
+  Editor editor = Editor(filename);
+  editor.run();
+  return 0;
+}

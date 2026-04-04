@@ -1,0 +1,71 @@
+CXX = g++-14
+CXXFLAGS = -std=c++20 -fmodules-ts -Wall -g
+LDLIBS = -lncurses
+
+# System header modules (precompiled)
+MODULE_HEADERS = \
+    memory \
+    iostream \
+    fstream \
+    sstream \
+    iomanip \
+    string \
+    utility \
+    stdexcept \
+    vector \
+    cstddef \
+    cctype \
+    optional \
+    set \
+    limits \
+    algorithm \
+    stack \
+    sys/stat.h \
+    unistd.h \
+    unordered_map
+MODULE_OBJS = $(MODULE_HEADERS:%=%.gcm)
+
+all: clean modules vm
+
+# Rule to build each system header module:
+%.gcm:
+	$(CXX) $(CXXFLAGS) -c -x c++-system-header $*
+
+modules: $(MODULE_OBJS)
+
+# ------------------------------------------------------------------
+# 1. Model
+Model/Buffer.o: Model/Buffer.cc
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+Model/Buffer-impl.o: Model/Buffer-impl.cc
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# ------------------------------------------------------------------
+# 2. View
+View/Screen.o: View/Screen.cc
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+View/Screen-impl.o: View/Screen-impl.cc
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# ------------------------------------------------------------------
+# 3. Controller
+Controller/Editor.o: Controller/Editor.cc
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# ------------------------------------------------------------------
+# 4. main
+main.o: main.cc
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# ------------------------------------------------------------------
+# Final link
+vm: Model/Buffer.o Model/Buffer-impl.o \
+    View/Screen.o View/Screen-impl.o \
+    Controller/Editor.o main.o
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDLIBS)
+
+clean:
+	rm -f *.o *.gcm Model/*.o View/*.o Controller/*.o vm 
+	rm -rf gcm.cache
