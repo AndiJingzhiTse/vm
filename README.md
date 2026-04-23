@@ -1,4 +1,4 @@
-A fully functional text editor in terminal mimicking [VIM](https://www.vim.org/). To run, execute ./vm executable under src
+A fully functional text editor in terminal mimicking [Vim](https://www.vim.org/). To run, execute ./vm executable under src
 
 - follows MVC architecture
 - Uses inheritance and polymorphism for smooth switch between modes (insert, normal, command, replace, search), implements strategy pattern
